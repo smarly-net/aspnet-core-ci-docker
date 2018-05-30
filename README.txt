@@ -337,3 +337,19 @@ docker push docker-registry.smarly.net/docker-ci:dind
 docker push docker-registry.smarly.net/microsoft/dotnet:2.0.3-sdk
 docker push docker-registry.smarly.net/microsoft/dotnet:2.0.3-runtime	
 	
+========================
+
+docker run --detach --network smarly --ip 172.18.0.21 --restart always --name docker-elasticsearch \
+-p 9200:9200  \
+-e "VIRTUAL_PORT=9200" \
+-e "VIRTUAL_HOST=elasticsearch.smarly.com" \
+-e "LETSENCRYPT_HOST=elasticsearch.smarly.com" \
+-e "LETSENCRYPT_EMAIL=smarly@smarly.net" \
+elasticsearch
+
+docker run --detach --network smarly --ip 172.18.0.22 --restart always --name docker-kibana \
+-e "ELASTICSEARCH_URL=http://172.18.0.21:9200" \
+-e "VIRTUAL_HOST=kibana.smarly.com" \
+-e "LETSENCRYPT_HOST=kibana.smarly.com" \
+-e "LETSENCRYPT_EMAIL=smarly@smarly.net" \
+kibana
