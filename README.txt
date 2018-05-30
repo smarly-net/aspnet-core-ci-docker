@@ -353,3 +353,12 @@ docker run --detach --network smarly --ip 172.18.0.22 --restart always --name do
 -e "LETSENCRYPT_HOST=kibana.smarly.com" \
 -e "LETSENCRYPT_EMAIL=smarly@smarly.net" \
 kibana
+
+docker run --detach --network smarly --ip 172.18.0.20 --restart always --name docker-nginx-elastick-kibana \
+--publish :80 --publish :9200 --publish :9300 \
+-v ~/docker/nginx-elastick-kibana/conf.d:/etc/nginx/conf.d  \
+-v ~/docker/nginx-elastick-kibana/vhost.d:/etc/nginx/vhost.d  \
+-v ~/docker/nginx-elastick-kibana/nginx.conf:/etc/nginx/nginx.conf  \
+-v ~/docker/nginx-elastick-kibana/www:/usr/share/nginx \
+-v ~/docker/nginx-elastick-kibana/certs:/etc/nginx/certs:ro \
+nginx
