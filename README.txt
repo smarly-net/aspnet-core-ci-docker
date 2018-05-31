@@ -340,25 +340,35 @@ docker push docker-registry.smarly.net/microsoft/dotnet:2.0.3-runtime
 ========================
 
 docker run --detach --network smarly --ip 172.18.0.21 --restart always --name docker-elasticsearch \
--p 9200:9200  \
--e "VIRTUAL_PORT=9200" \
+-p :9200  \
+elasticsearch
+
+docker run --detach --network smarly --restart always --name docker-nginx-elasticsearch-proxy \
+-p :80 \
 -e "VIRTUAL_HOST=elasticsearch.smarly.com" \
 -e "LETSENCRYPT_HOST=elasticsearch.smarly.com" \
 -e "LETSENCRYPT_EMAIL=smarly@smarly.net" \
-elasticsearch
+-e BASIC_AUTH_USERNAME=username \
+-e BASIC_AUTH_PASSWORD=password \
+-e PROXY_PASS=http://172.18.0.21:9200 \
+-e SERVER_NAME=elasticsearch.smarly.com \
+-e PORT=80 \
+quay.io/dtan4/nginx-basic-auth-proxy
 
 docker run --detach --network smarly --ip 172.18.0.22 --restart always --name docker-kibana \
+-p :5601 \
 -e "ELASTICSEARCH_URL=http://172.18.0.21:9200" \
+kibana
+
+docker run --detach --network smarly --restart always --name docker-nginx-kibana-proxy \
+-p :80 \
 -e "VIRTUAL_HOST=kibana.smarly.com" \
 -e "LETSENCRYPT_HOST=kibana.smarly.com" \
 -e "LETSENCRYPT_EMAIL=smarly@smarly.net" \
-kibana
+-e BASIC_AUTH_USERNAME=username \
+-e BASIC_AUTH_PASSWORD=password \
+-e PROXY_PASS=http://172.18.0.22:5601 \
+-e SERVER_NAME=kibana.smarly.com \
+-e PORT=80 \
+quay.io/dtan4/nginx-basic-auth-proxy
 
-docker run --detach --network smarly --ip 172.18.0.20 --restart always --name docker-nginx-elastick-kibana \
---publish :80 --publish :9200 --publish :9300 \
--v ~/docker/nginx-elastick-kibana/conf.d:/etc/nginx/conf.d  \
--v ~/docker/nginx-elastick-kibana/vhost.d:/etc/nginx/vhost.d  \
--v ~/docker/nginx-elastick-kibana/nginx.conf:/etc/nginx/nginx.conf  \
--v ~/docker/nginx-elastick-kibana/www:/usr/share/nginx \
--v ~/docker/nginx-elastick-kibana/certs:/etc/nginx/certs:ro \
-nginx
