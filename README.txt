@@ -326,16 +326,16 @@ docker login docker-registry.smarly.net -u root
 =====================================
 
 docker pull docker:dind
-docker pull microsoft/dotnet:2.0.3-runtime
-docker pull microsoft/dotnet:2.0.3-runtime
+docker pull microsoft/dotnet:2.1-sdk-alpine
+docker pull microsoft/dotnet:2.1-aspnetcore-runtime-alpine
 
 docker tag docker:dind docker-registry.smarly.net/docker-ci:dind
-docker tag microsoft/dotnet:2.0.3-sdk docker-registry.smarly.net/microsoft/dotnet:2.0.3-sdk
-docker tag microsoft/dotnet:2.0.3-runtime docker-registry.smarly.net/microsoft/dotnet:2.0.3-runtime
+docker tag microsoft/dotnet:2.1-sdk-alpine docker-registry.smarly.net/microsoft/dotnet:2.1-sdk-alpine
+docker tag microsoft/dotnet:2.1-aspnetcore-runtime-alpine docker-registry.smarly.net/microsoft/dotnet:2.1-aspnetcore-runtime-alpine
 
 docker push docker-registry.smarly.net/docker-ci:dind
-docker push docker-registry.smarly.net/microsoft/dotnet:2.0.3-sdk
-docker push docker-registry.smarly.net/microsoft/dotnet:2.0.3-runtime	
+docker push docker-registry.smarly.com/microsoft/dotnet:2.1-sdk-alpine
+docker push docker-registry.smarly.net/microsoft/dotnet:2.1-aspnetcore-runtime-alpine	
 	
 ========================
 
@@ -372,3 +372,26 @@ docker run --detach --network smarly --restart always --name docker-nginx-kibana
 -e PORT=80 \
 quay.io/dtan4/nginx-basic-auth-proxy
 
+=========================================
+
+docker container stop docker-bearcode-postgres-production
+docker container rm docker-bearcode-postgres-production
+
+docker run --detach --network smarly --restart always --name docker-bearcode-postgres-production \
+--ip 172.18.0.11 \
+-p :5432 \
+-e "POSTGRES_DB=database" \
+-e "POSTGRES_USER=user" \
+-e "POSTGRES_PASSWORD=password" \
+postgres
+
+======================================
+
+docker run --detach --network smarly --restart always --name docker-pgadmin4  \
+-p :80  \
+-e "PGADMIN_DEFAULT_EMAIL=login_email"  \
+-e "PGADMIN_DEFAULT_PASSWORD=password"  \
+-e "VIRTUAL_HOST=pgadmin.bearcode.pro"  \
+-e "LETSENCRYPT_HOST=pgadmin.bearcode.pro"  \
+-e "LETSENCRYPT_EMAIL=smarly@smarly.net"  \
+dpage/pgadmin4
