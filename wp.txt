@@ -1,0 +1,2 @@
+docker pull mysql:8.0.19
+docker pull wordpress:5.3.2-php7.4-fpm-alpine
