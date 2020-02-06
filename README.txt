@@ -31,6 +31,9 @@ sudo su
 	firewall-cmd --permanent --zone=public --add-service=http
 	firewall-cmd --permanent --zone=public --add-service=https
 	
+# Masquerading allows for docker ingress and egress (this is the juicy bit) CentOS 8
+firewall-cmd --zone=public --add-masquerade --permanent	
+	
 Все доступные сервисы
 	firewall-cmd --get-service
 	
