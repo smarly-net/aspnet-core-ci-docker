@@ -398,3 +398,11 @@ docker run --detach --network smarly --restart always --name docker-pgadmin4  \
 -e "LETSENCRYPT_HOST=pgadmin.bearcode.pro"  \
 -e "LETSENCRYPT_EMAIL=smarly@smarly.net"  \
 dpage/pgadmin4
+
+====================
+
+clear docker size
+
+df -h
+docker system prune
+sudo sh -c "truncate -s 0 /var/lib/docker/containers/*/*-json.log"
